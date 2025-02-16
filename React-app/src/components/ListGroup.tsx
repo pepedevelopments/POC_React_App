@@ -24,6 +24,7 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
             key={item}
             onClick={() => {
               setSelectedIndex(index);
+              onSelectItem(item);
               console.log("Item clicked", item);
             }}
           >
