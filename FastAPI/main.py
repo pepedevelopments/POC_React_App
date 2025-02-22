@@ -2,12 +2,18 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, Depends
 from typing import Annotated
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 from database import SessionLocal, engine
 import models
 from fastapi.middleware.cors import CORSMiddleware
+import uuid
+import logging
 
 models.Base.metadata.create_all(bind=engine)
+
+# Configure le logger
+logging.basicConfig(level=logging.INFO)  # Vous pouvez ajuster le niveau ici (DEBUG, INFO, WARNING, etc.)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -23,23 +29,35 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-class Person(BaseModel):
+class PersonBase(BaseModel):
     age: int
     name: str
     profession: str
 
+class PersonCreate(PersonBase):
+    pass
+
+class Person(PersonBase):
+    id: UUID4
+
+    class Config:
+        from_attributes = True
+
 def get_db():
     db = SessionLocal()
+    print("Database session created")
     try:
         yield db
     finally:
         db.close()
+        print("Database session closed")
 
 db_dependencies = Annotated[Session, Depends(get_db)]
 
 @app.post('/persons/', response_model=Person)
-async def create_person(person: Person, db: db_dependencies):
-    db_person = models.Person(**person.dict())
+async def create_person(person: PersonCreate, db: db_dependencies):
+    print("Creating a new person")
+    db_person = models.Person(id=uuid.uuid4(),**person.dict())
     db.add(db_person)
     db.commit()
     db.refresh(db_person)
@@ -47,11 +65,20 @@ async def create_person(person: Person, db: db_dependencies):
 
 @app.get('/persons/', response_model=list[Person])
 async def read_persons(db: db_dependencies, skip: int = 0, limit: int = 100):
-    persons = db.query(models.Person).offset(skip).limit(limit).all()
-    return persons
+    logger.info("Test")
+    print("Test")
+    try:
+        logger.info("Attempting to fetch persons from the database")
+        persons = db.query(models.Person).offset(skip).limit(limit).all()
+        logger.info(f"Fetched persons: {persons}")
+        return persons
+    except Exception as e:
+        print(f"Error fetching persons: {e}")
+        raise HTTPException(status_code=500, detail="Error fetching persons")
+
 
 @app.put('/persons/{person_id}', response_model=Person)
-async def update_person(person_id: int, person: Person, db: db_dependencies):
+async def update_person(person_id: UUID4, person: Person, db: db_dependencies):
     # Fetch the person from the database
     db_person = db.query(models.Person).filter(models.Person.id == person_id).first()
     
@@ -71,7 +98,7 @@ async def update_person(person_id: int, person: Person, db: db_dependencies):
 
 
 @app.delete('/persons/{person_id}', response_model=Person)
-async def delete_person(person_id: int, db: db_dependencies):
+async def delete_person(person_id: UUID4, db: db_dependencies):
     # Fetch the person from the database
     db_person = db.query(models.Person).filter(models.Person.id == person_id).first()
     

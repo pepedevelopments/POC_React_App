@@ -15,7 +15,7 @@ const CreatePerson: React.FC<CreatePersonProps> = ({ addPerson }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addPerson({ name, age, profession });
+    addPerson({ age, name, profession });
     setAge(0);
     setName("");
     setProfession("");

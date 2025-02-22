@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import api from "./api";
 import CreatePerson from "./components/CreatePerson";
 import ReadPerson from "./components/ReadPerson";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   interface Person {
-    id: number;
+    id: string;
     age: number;
     name: string;
     profession: string;
@@ -27,8 +28,10 @@ function App() {
     name: string;
     profession: string;
   }) => {
+    const newPerson = { id: uuidv4(), ...person };
     try {
-      const response = await api.post("/persons/", person);
+      console.log("newPerson:", newPerson);
+      const response = await api.post("/persons/", newPerson);
 
       // Vérifiez la réponse de l'API
       console.log("Response:", response);
@@ -37,8 +40,6 @@ function App() {
       setPersons((prevPersons) => [...prevPersons, response.data]);
 
       console.log("Personne ajoutée:", response.data);
-
-      fetchPersons(); // Met à jour la liste
     } catch (error) {
       console.error("Erreur:", error);
     }
