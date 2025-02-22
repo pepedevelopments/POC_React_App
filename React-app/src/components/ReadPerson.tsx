@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api";
 
 interface Person {
@@ -14,17 +14,15 @@ interface ReadPersonProps {
 
 const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null); // État pour la personne sélectionnée
-  const [, setPersons] = useState<Person[]>([]);
+  const [persons, setPersons] = useState<Person[]>(person);
 
-  const fetchPersons = async () => {
-    const response = await api.get("/persons/");
-    console.log("Fetched persons:", response.data);
-    setPersons(response.data);
-  };
+  useEffect(() => {
+    setPersons(person); // Mettez à jour l'état lorsque la prop `person` change
+  }, [person]);
 
   const handleRowClick = (person: Person) => {
     console.log("personId", person.id);
-    if (selectedPerson?.id == person.id) {
+    if (selectedPerson?.id === person.id) {
       setSelectedPerson(null); // Si la ligne est déjà sélectionnée, on la désélectionne
     } else {
       setSelectedPerson(person); // Sélectionne la personne sur la ligne cliquée
@@ -40,9 +38,13 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
 
         if (response.data.ok) {
           console.log("Personne modifiée", selectedPerson);
-          // Mettre à jour la liste des personnes après suppression
-          fetchPersons();
-          setSelectedPerson(null); // Réinitialiser la sélection après suppression
+          // Mettre à jour la liste des personnes après modification
+          setPersons((prevPersons) =>
+            prevPersons.map((p) =>
+              p.id === selectedPerson.id ? { ...p, ...selectedPerson } : p
+            )
+          );
+          setSelectedPerson(null); // Réinitialiser la sélection après modification
         } else {
           throw new Error("Erreur lors de la modification de la personne");
         }
@@ -55,9 +57,7 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
   const handleDeleteClick = async () => {
     if (selectedPerson) {
       try {
-        console.log("selectedPerson", selectedPerson);
-        console.log("selectedPersonId", selectedPerson.id);
-        const response = await api.delete(`/persons/${selectedPerson.id}`, {
+        await api.delete(`/persons/${selectedPerson.id}`, {
           method: "DELETE",
         });
 
@@ -84,14 +84,14 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
           </tr>
         </thead>
         <tbody>
-          {person.map((person) => (
+          {persons.map((person) => (
             <tr
               key={person.id}
               onClick={() => handleRowClick(person)} // Gère le clic sur une ligne
               style={{
                 cursor: "pointer",
                 backgroundColor:
-                  selectedPerson?.id == person.id ? "#f0f0f0" : "", // Changer la couleur de fond quand sélectionnée
+                  selectedPerson?.id === person.id ? "#f0f0f0" : "", // Changer la couleur de fond quand sélectionnée
               }}
             >
               <td>{person.age}</td>

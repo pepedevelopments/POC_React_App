@@ -15,8 +15,12 @@ function App() {
   const [persons, setPersons] = useState<Person[]>([]);
 
   const fetchPersons = async () => {
-    const response = await api.get("/persons/");
-    setPersons(response.data);
+    try {
+      const response = await api.get("/persons/");
+      setPersons(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des personnes:", error);
+    }
   };
 
   useEffect(() => {
@@ -37,7 +41,7 @@ function App() {
       console.log("Response:", response);
 
       // Ajoutez la nouvelle personne directement à l'état
-      setPersons((prevPersons) => [...prevPersons, response.data]);
+      fetchPersons();
 
       console.log("Personne ajoutée:", response.data);
     } catch (error) {
