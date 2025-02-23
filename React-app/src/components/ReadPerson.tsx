@@ -29,12 +29,20 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
     }
   };
 
-  const handleEditClick = async () => {
+  const handleEditClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("handleEditClick");
     if (selectedPerson) {
       try {
-        const response = await api.put(`/persons/${selectedPerson.id}`, {
-          method: "PUT",
-        });
+        const url = `/persons/${selectedPerson.id}`;
+        console.log("URL de la requête:", url);
+        console.log("Données envoyées:", selectedPerson);
+        const response = await api.put(
+          `/persons/${selectedPerson.id}`,
+          selectedPerson
+        );
+
+        console.log("response:", response);
 
         if (response.data.ok) {
           console.log("Personne modifiée", selectedPerson);
@@ -73,6 +81,8 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
     }
   };
 
+  console.log("Hello !");
+
   return (
     <div>
       <table>
@@ -104,7 +114,37 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
       {/* Afficher les boutons si une ligne est sélectionnée */}
       {selectedPerson && (
         <div>
-          <button onClick={handleEditClick}>Modifier</button>
+          <h3>Modifier la personne</h3>
+          <form onSubmit={handleEditClick}>
+            <input
+              type="text"
+              value={selectedPerson.name}
+              onChange={(e) =>
+                setSelectedPerson({ ...selectedPerson, name: e.target.value })
+              }
+            />
+            <input
+              type="number"
+              value={selectedPerson.age}
+              onChange={(e) =>
+                setSelectedPerson({
+                  ...selectedPerson,
+                  age: Number(e.target.value),
+                })
+              }
+            />
+            <input
+              type="text"
+              value={selectedPerson.profession}
+              onChange={(e) =>
+                setSelectedPerson({
+                  ...selectedPerson,
+                  profession: e.target.value,
+                })
+              }
+            />
+            <button type="submit">Modifier</button>
+          </form>
           <button onClick={handleDeleteClick}>Supprimer</button>
         </div>
       )}

@@ -7,13 +7,8 @@ from database import SessionLocal, engine
 import models
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
-import logging
 
 models.Base.metadata.create_all(bind=engine)
-
-# Configure le logger
-logging.basicConfig(level=logging.INFO)  # Vous pouvez ajuster le niveau ici (DEBUG, INFO, WARNING, etc.)
-logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -42,6 +37,7 @@ class Person(PersonBase):
 
     class Config:
         from_attributes = True
+        
 
 def get_db():
     db = SessionLocal()
@@ -65,19 +61,21 @@ async def create_person(person: PersonCreate, db: db_dependencies):
 
 @app.get('/persons/', response_model=list[Person])
 async def read_persons(db: db_dependencies, skip: int = 0, limit: int = 100):
-    logger.info("Test")
     print("Test")
     try:
-        logger.info("Attempting to fetch persons from the database")
+        print("Attempting to fetch persons from the database")
         persons = db.query(models.Person).offset(skip).limit(limit).all()
-        logger.info(f"Fetched persons: {persons}")
+        print(f"Fetched persons: {persons}")
         return persons
     except Exception as e:
         print(f"Error fetching persons: {e}")
         raise HTTPException(status_code=500, detail="Error fetching persons")
 
+class UpdatePersonResponse(BaseModel):
+    ok: bool
+    person: Person
 
-@app.put('/persons/{person_id}', response_model=Person)
+@app.put('/persons/{person_id}', response_model=UpdatePersonResponse)
 async def update_person(person_id: UUID4, person: Person, db: db_dependencies):
     # Fetch the person from the database
     db_person = db.query(models.Person).filter(models.Person.id == person_id).first()
@@ -94,7 +92,7 @@ async def update_person(person_id: UUID4, person: Person, db: db_dependencies):
     db.commit()
     db.refresh(db_person)
     
-    return db_person
+    return {"ok": True, "person": db_person}
 
 
 @app.delete('/persons/{person_id}', response_model=Person)
