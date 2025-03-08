@@ -1,0 +1,7 @@
+.table {
+  border: 2px solid black; /* Bordure noire épaisse pour le tableau */
+}
+.table th,
+.table td {
+  border: 1px solid black; /* Bordure noire épaisse pour les cellules */
+}

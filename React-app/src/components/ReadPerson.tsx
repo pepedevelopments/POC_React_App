@@ -81,8 +81,6 @@ const ReadPerson: React.FC<ReadPersonProps> = ({ person }) => {
     }
   };
 
-  console.log("Hello !");
-
   return (
     <div>
       <table>
