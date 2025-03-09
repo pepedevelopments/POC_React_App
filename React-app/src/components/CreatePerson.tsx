@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "./Navbar";
 
 interface CreatePersonProps {
   addPerson: (person: {
@@ -24,8 +23,6 @@ const CreatePerson: React.FC<CreatePersonProps> = ({ addPerson }) => {
 
   return (
     <>
-      <Navbar />
-
       <form onSubmit={handleSubmit}>
         <input
           type="number"

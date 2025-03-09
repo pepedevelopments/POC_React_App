@@ -17,7 +17,7 @@ const Navbar = () => {
       <div className="container-fluid g-col-12">
         <a className="navbar-brand">
           <i className="bi bi-calendar2-week"></i>
-          Person management
+          <span className="ms-2">Person management</span>
         </a>
         <button
           className="navbar-toggler"
