@@ -13,7 +13,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 origins = [
-    'http://localhost:5173',
+    'http://localhost:5173','*'
 ]
 
 app.add_middleware(
@@ -109,3 +109,22 @@ async def delete_person(person_id: UUID4, db: db_dependencies):
     db.commit()
     
     return db_person
+
+
+# --- Nouveau code pour le calcul ---
+
+# Modèle pour les données de la requête de calcul
+class CalculationRequest(BaseModel):
+    a: float
+    b: float
+
+# Fonction de calcul côté backend
+def perform_calculation(a: float, b: float) -> float:
+    return a + b  # Exemple simple : addition
+
+# Endpoint pour effectuer le calcul
+@app.post('/calculate/', response_model=dict)
+async def calculate(request: CalculationRequest):
+    # Utilisation de la fonction de calcul
+    result = perform_calculation(request.a, request.b)
+    return {"result": result}  # Retourne le résultat du calcul sous forme de JSON

@@ -1,6 +1,29 @@
+import Button from "../Button";
 import "./PlanningPage.css";
+import api from "../../api";
+import { useState } from "react";
+
+
 
 const PlanningPage = () => {
+  const [result, setResult] = useState(null); // État pour le résultat du calcul
+
+   // Fonction qui fait l'appel API pour le calcul
+   const handleTestClick = async () => {
+    try {
+      const response = await api.post("/calculate/", {
+        a: 10, // Exemple de valeur a
+        b: 5,  // Exemple de valeur b
+      });
+
+      // Met à jour l'état avec le résultat du calcul
+      setResult(response.data.result);
+      console.log("Résultat du calcul:", response.data.result);
+    } catch (error) {
+      console.error("Erreur lors du calcul:", error);
+    }
+  };
+
   return (
     <div>
       <div className="container">
@@ -162,7 +185,22 @@ const PlanningPage = () => {
             </div>
           </div>
         </div>
-      </div>
+
+      {/* <div className="container my-5">
+        <Button
+          color="primary"
+          onClick={handleTestClick} 
+        >
+          Test
+        </Button>
+
+        {result !== null && (
+          <div className="result">
+            <h3>Résultat du calcul : {result}</h3>
+          </div>
+        )}
+      </div> */}
+    </div>
     </div>
   );
 };

@@ -70,7 +70,7 @@ const PersonsPage = () => {
       </div>
 
       <div className="container my-5 mt-5">
-        <h3>Entrer des containtes par employé:</h3>
+        <h3>Entrer des contraintes par employé:</h3>
          <Select
           options={optionsPersons}
           message="Sélectionner un employé"
