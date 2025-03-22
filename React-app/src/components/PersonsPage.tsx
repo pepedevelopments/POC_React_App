@@ -11,6 +11,7 @@ const PersonsPage = () => {
   const [persons, setPersons] = useState([]);
   const [showEmployeeNbrForm, setShowEmployeeNbrForm] = useState(false);
   const [showTimeStampForm, setShowTimeStampForm] = useState(false);
+  const [PersonForm, setPersonForm] = useState(false);
 
   const fetchPersons = async () => {
     try {
@@ -40,8 +41,13 @@ const PersonsPage = () => {
     }
   };
 
-  //const optionsPersons = ["Personne 1", "Personne 2", "Personne 3"];
+  const optionsPersons = ["Personne 1", "Personne 2", "Personne 3"];
   const optionsCreneaux = ["Matin", "Après-midi", "Nuit"];
+
+  const handleSelectPersonChange = (selectedValue: string) => {
+    console.log("Selected value:", selectedValue);
+    setPersonForm(selectedValue !== "");
+  };
 
   const handleSelectTimeStampChange = (selectedValue: string) => {
     console.log("Selected value:", selectedValue);
@@ -56,17 +62,25 @@ const PersonsPage = () => {
   return (
     <div className="container">
       <div className="row"></div>
-      <div className="container my-5 mt-5">
-        <h3>Entrer des containtes par employé:</h3>
-        {/* <Select
-          options={optionsPersons}
-          message="Sélectionner un employé"
-          onChange={handleSelectChange}
-        /> */}
-      </div>
 
       <div className="container my-5">
-        <DaySelector />
+        <h3>Gérer les employés:</h3>
+        <CreatePerson addPerson={addPerson} />
+        <ReadPerson person={persons} />
+      </div>
+
+      <div className="container my-5 mt-5">
+        <h3>Entrer des containtes par employé:</h3>
+         <Select
+          options={optionsPersons}
+          message="Sélectionner un employé"
+          onChange={handleSelectPersonChange}
+        /> 
+      </div>
+      <div style={{ maxWidth: "500px", margin: "0 auto" }}>
+           <div className="container my-5">
+           {PersonForm && (<DaySelector onClose={() => setPersonForm(false)} />)}
+           </div>
       </div>
 
       <div className="container my-5">
