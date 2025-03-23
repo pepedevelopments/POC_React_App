@@ -121,7 +121,7 @@ const PersonsPage = () => {
           <Form
             onClose={() => setShowTimeStampForm(false)}
             title="Nombre d'heures par créneau"
-            elements={[selectedCreneau]}
+            elements={[selectedCreneau || ""]}
           />
         )}
       </div>
