@@ -1,22 +1,40 @@
 import Button from "../Button";
 import "./PlanningPage.css";
 import api from "../../api";
-import { useState } from "react";
-
-
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const PlanningPage = () => {
-  const [result, setResult] = useState(null); // État pour le résultat du calcul
+  interface Person {
+    age: number;
+    name: string;
+    profession: string;
+    id: string;
+  }
 
-   // Fonction qui fait l'appel API pour le calcul
+  const [persons, setPersons] = useState<Person[]>([]);
+  const [result, setResult] = useState(null);
+
+  const fetchPersons = async () => {
+    try {
+      const response = await api.get("/persons/"); 
+      setPersons(response.data.map((person: Omit<Person, 'id'>) => ({ ...person, id: uuidv4() })));
+    } catch (error) {
+      console.error("Erreur lors de la récupération des personnes:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPersons();
+  }, []);
+
    const handleTestClick = async () => {
     try {
       const response = await api.post("/calculate/", {
-        a: 10, // Exemple de valeur a
-        b: 5,  // Exemple de valeur b
+        a: 10, 
+        b: 5,  
       });
 
-      // Met à jour l'état avec le résultat du calcul
       setResult(response.data.result);
       console.log("Résultat du calcul:", response.data.result);
     } catch (error) {
@@ -24,185 +42,130 @@ const PlanningPage = () => {
     }
   };
 
-  return (
-    <div>
-      <div className="container">
-        <div className="row my-5"></div>
-        <div className="row">
-          <div className="col-12">
-            <h1 className="my-5 text-center">Planning hebdomadaire</h1>
-            <div className="table-responsive">
-              <table className="table text-center table-bordered">
-                <thead>
-                  <tr>
-                    <th>Personne</th>
-                    <th colSpan={3} className="day-header">
-                      Lundi
-                    </th>
-                    <th colSpan={3} className="day-header">
-                      Mardi
-                    </th>
-                    <th colSpan={3} className="day-header">
-                      Mercredi
-                    </th>
-                    <th colSpan={3} className="day-header">
-                      Jeudi
-                    </th>
-                    <th colSpan={3} className="day-header">
-                      Vendredi
-                    </th>
-                    <th colSpan={3} className="day-header">
-                      Samedi
-                    </th>
-                    <th colSpan={3} className="day-header">
-                      Dimanche
-                    </th>
-                  </tr>
-                  <tr>
-                    <th></th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                    <th>Matin</th>
-                    <th>Après-midi</th>
-                    <th>Nuit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Personne 1</td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                  </tr>
-                  <tr>
-                    <td>Personne 2</td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                  </tr>
-                  <tr>
-                    <td>Personne 3</td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                  </tr>
-                  <tr>
-                    <td>Personne 4</td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-danger"></td>
-                    <td className="table-success"></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+const renderTableRows = () => {
+  return persons.map((person) => (
+    <tr key={person.id}>
+      <td>{person.name}</td>
+      <td className="table-success"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-success"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-success"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-success"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-success"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+      <td className="table-danger"></td>
+    </tr>
+  ));
+};
+
+return (
+  <div>
+    <div className="container">
+      <div className="row my-5"></div>
+      <div className="row">
+        <div className="col-12">
+          <h1 className="my-5 text-center">Planning hebdomadaire</h1>
+          <div className="table-responsive">
+            <table className="table text-center table-bordered">
+              <thead>
+                <tr>
+                  <th>Employé</th>
+                  <th colSpan={4} className="day-header">
+                    Lundi
+                  </th>
+                  <th colSpan={4} className="day-header">
+                    Mardi
+                  </th>
+                  <th colSpan={4} className="day-header">
+                    Mercredi
+                  </th>
+                  <th colSpan={4} className="day-header">
+                    Jeudi
+                  </th>
+                  <th colSpan={4} className="day-header">
+                    Vendredi
+                  </th>
+                  <th colSpan={4} className="day-header">
+                    Samedi
+                  </th>
+                  <th colSpan={4} className="day-header">
+                    Dimanche
+                  </th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                  <th>Jour</th>
+                  <th>Matin</th>
+                  <th>Après-midi</th>
+                  <th>Nuit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {renderTableRows()} 
+              </tbody>
+            </table>
           </div>
         </div>
-
-      {/* <div className="container my-5">
-        <Button
-          color="primary"
-          onClick={handleTestClick} 
-        >
-          Test
-        </Button>
-
-        {result !== null && (
-          <div className="result">
-            <h3>Résultat du calcul : {result}</h3>
-          </div>
-        )}
-      </div> */}
+      </div>
     </div>
+
+    <div className="container my-5">
+      <Button color="primary" onClick={handleTestClick}>
+        Test
+      </Button>
+
+      {result !== null && (
+        <div className="result">
+          <h3>Résultat du calcul : {result}</h3>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 };
 
 export default PlanningPage;

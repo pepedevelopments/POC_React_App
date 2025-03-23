@@ -9,14 +9,18 @@ import DaySelector from "./DaySelector";
 
 const PersonsPage = () => {
   const [persons, setPersons] = useState([]);
+  const [optionsPersons, setOptionsPersons] = useState<string[]>([]);
   const [showEmployeeNbrForm, setShowEmployeeNbrForm] = useState(false);
   const [showTimeStampForm, setShowTimeStampForm] = useState(false);
   const [PersonForm, setPersonForm] = useState(false);
+  const [selectedCreneau, setSelectedCreneau] = useState<string | null>(null);
 
   const fetchPersons = async () => {
     try {
       const response = await api.get("/persons/");
       setPersons(response.data);
+      const names = response.data.map((person: { name: string }) => person.name);
+      setOptionsPersons(names);
     } catch (error) {
       console.error("Erreur lors de la récupération des personnes:", error);
     }
@@ -34,15 +38,14 @@ const PersonsPage = () => {
     const newPerson = { id: uuidv4(), ...person };
     try {
       const response = await api.post("/persons/", newPerson);
-      fetchPersons(); // Récupérer à nouveau les personnes
+      fetchPersons();
       console.log("Personne ajoutée:", response.data);
     } catch (error) {
       console.error("Erreur:", error);
     }
   };
 
-  const optionsPersons = ["Personne 1", "Personne 2", "Personne 3"];
-  const optionsCreneaux = ["Matin", "Après-midi", "Nuit"];
+  const optionsCreneaux = ["Jour","Matin", "Après-midi", "Nuit"];
 
   const handleSelectPersonChange = (selectedValue: string) => {
     console.log("Selected value:", selectedValue);
@@ -51,11 +54,13 @@ const PersonsPage = () => {
 
   const handleSelectTimeStampChange = (selectedValue: string) => {
     console.log("Selected value:", selectedValue);
+    setSelectedCreneau(selectedValue);
     setShowTimeStampForm(selectedValue !== "");
   };
 
   const handleSelectPersonsNbrChange = (selectedValue: string) => {
     console.log("Selected value:", selectedValue);
+    setSelectedCreneau(selectedValue);
     setShowEmployeeNbrForm(selectedValue !== "");
   };
 
@@ -97,7 +102,7 @@ const PersonsPage = () => {
           <Form
             onClose={() => setShowEmployeeNbrForm(false)}
             title="Nombre d'employés par créneau"
-            elements={["Matin", "Après-midi", "Nuit"]}
+            elements={[selectedCreneau || ""]}
           />
         )}
       </div>
@@ -116,7 +121,7 @@ const PersonsPage = () => {
           <Form
             onClose={() => setShowTimeStampForm(false)}
             title="Nombre d'heures par créneau"
-            elements={["Matin", "Après-midi", "Nuit"]}
+            elements={[selectedCreneau]}
           />
         )}
       </div>
