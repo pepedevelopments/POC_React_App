@@ -38,6 +38,22 @@ class Person(PersonBase):
     class Config:
         from_attributes = True
         
+class ConstraintBase(BaseModel):
+    week: int
+    day: models.DayEnum
+    slot: models.SlotEnum
+    constraint_type: models.ConstraintTypeEnum
+    person_id: UUID4
+
+class ConstraintCreate(ConstraintBase):
+    pass
+
+class Constraint(ConstraintBase):
+    id: UUID4
+
+    class Config:
+        orm_mode = True
+
 
 def get_db():
     db = SessionLocal()
@@ -59,7 +75,7 @@ async def create_person(person: PersonCreate, db: db_dependencies):
     db.refresh(db_person)
     return db_person
 
-@app.get('/persons/', response_model=list[Person])
+""" @app.get('/persons/', response_model=list[Person])
 async def read_persons(db: db_dependencies, skip: int = 0, limit: int = 100):
     print("Test")
     try:
@@ -70,6 +86,15 @@ async def read_persons(db: db_dependencies, skip: int = 0, limit: int = 100):
     except Exception as e:
         print(f"Error fetching persons: {e}")
         raise HTTPException(status_code=500, detail="Error fetching persons")
+ """
+@app.get('/persons/', response_model=list[Person])
+async def read_persons(db: db_dependencies):
+    try:
+        # Suppression des paramètres de pagination pour récupérer toutes les personnes
+        persons = db.query(models.Person).all()
+        return persons
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching persons: {str(e)}")
 
 class UpdatePersonResponse(BaseModel):
     ok: bool
