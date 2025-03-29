@@ -9,7 +9,14 @@ const Sidebar: React.FC = () => {
   return (
     <div>
       <div className="sidebar">
-        <h2 className="text-white text-center">Planicare</h2>
+        <div className="sidebar-header text-center py-3">
+          <img
+            src="./../../Assets/logo-planicare-plateforme.png" 
+            alt="Logo"
+            style={{ width: '197px', height: 'auto' }}
+          />
+        </div>
+
         <ul className="list-unstyled my-5">
           <li>
             <Link
@@ -36,6 +43,15 @@ const Sidebar: React.FC = () => {
             </Link>
           </li>
         </ul>
+
+        <div className="sidebar-footer d-flex align-items-center justify-content-between px-4 py-2">
+          <img
+            src="./../../Assets/Avatar.png"
+            alt="Logo"
+            style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+          />
+          <span className="text">Florine Claire Daurès</span>
+        </div>
       </div>
     </div>
   );
