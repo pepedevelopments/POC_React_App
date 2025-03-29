@@ -29,3 +29,7 @@
     margin-left: 250px;
     padding: 20px;
   }
+
+  .active {
+    font-weight: bold;
+  }
