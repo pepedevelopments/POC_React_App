@@ -10,7 +10,7 @@ const PlanningPage = () => {
     <div>
       <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center ">
-          <h1>Planning Mensuel</h1>
+          <h1 style={{ fontWeight: 'bold' }}>Planning mensuel: chirurgie vasculaire</h1>
           <select
             className="form-select form-select-sm"
             aria-label="Select example"
@@ -77,10 +77,10 @@ const PlanningPage = () => {
         <div className="d-flex ms-2 my-3" style={{ gap: '30px' }}>
                 <ColoredSquareWithText color='#f8d487' opacity={1} text="Poste de jour (J)" />
                 <ColoredSquareWithText color='#8ba2cd' opacity={1} text="Poste de nuit (N)" />
-                <ColoredSquareWithText color='#f3a5bc' opacity={1} text="Congé (C)" />
+                <ColoredSquareWithText color='#1b263b' opacity={1} text="Congé (C)" />
                 <ColoredSquareWithText color='#aecbb8' opacity={1} text="Maladie (M)" />
                 <ColoredSquareWithText color='#ffbd8e' opacity={1} text="Formation (F)" />
-                <ColoredSquareWithText color='#415a77' opacity={1} text="Absence (A)" />
+                <ColoredSquareWithText color='#415a77' opacity={1} text="Demande exceptionnelle" />
             </div>
             </div>
 

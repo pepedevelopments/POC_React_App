@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';  
 
 import './Sidebar.css';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div>
-      <div className="sidebar">
+      <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header text-center py-3">
-          <img
-            src="./../../Assets/logo-planicare-plateforme.png" 
-            alt="Logo"
-            style={{ width: '197px', height: 'auto' }}
-          />
+          {isOpen ? (
+            <img
+              src="./../../Assets/logo-planicare-plateforme.png"
+              alt="Logo Planicare"
+              style={{ width: '197px', height: 'auto' }}
+            />
+          ) : (
+            <img
+              src="./../../Assets/favicon-planicare.svg"
+              alt="Favicon"
+              style={{ width: '46px', height: '46px', objectFit: 'cover' }}
+            />
+          )}
         </div>
 
         <ul className="list-unstyled my-5">
@@ -23,7 +36,7 @@ const Sidebar: React.FC = () => {
               to="/"
               className={`text ${location.pathname === '/' ? 'active' : ''}`}
             >
-              Tableau de bord
+              {isOpen && 'Tableau de bord'} {/* Cache le texte si fermé */}
             </Link>
           </li>
           <li>
@@ -31,7 +44,15 @@ const Sidebar: React.FC = () => {
               to="/planning"
               className={`text ${location.pathname === '/planning' ? 'active' : ''}`}
             >
-              Planning
+              {isOpen && 'Planning mensuel'} {/* Cache le texte si fermé */}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/historiquePlannings"
+              className={`text ${location.pathname === '/historiquePLannings' ? 'active' : ''}`}
+            >
+              {isOpen && 'Historique de plannings'} {/* Cache le texte si fermé */}
             </Link>
           </li>
           <li>
@@ -39,22 +60,27 @@ const Sidebar: React.FC = () => {
               to="/equipe"
               className={`text ${location.pathname === '/equipe' ? 'active' : ''}`}
             >
-              Equipe
+              {isOpen && 'Equipe'} {/* Cache le texte si fermé */}
             </Link>
           </li>
         </ul>
 
+        <button className="toggle-button" onClick={toggleSidebar}>
+          {isOpen ? '❮' : '❯'}
+        </button>
+
         <div className="sidebar-footer d-flex align-items-center justify-content-between px-4 py-2">
-          <img
-            src="./../../Assets/Avatar.png"
-            alt="Logo"
-            style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-          />
-          <span className="text">Florine Claire Daurès</span>
+          {isOpen &&
+            <><img
+              src="./../../Assets/Avatar.png"
+              alt="Logo"
+              style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+              <span className="text">Florine Claire Daurès</span></>}
+          
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;

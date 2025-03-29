@@ -16,3 +16,15 @@
     background-position: right 10px center; 
     background-size: 15px;
   }
+
+  .main-content {
+    transition: margin-left 0.3s ease;
+  }
+  
+  .sidebar-open .main-content {
+    margin-left: 250px; 
+  }
+  
+  .sidebar-closed .main-content {
+    margin-left: 60px; 
+  }

@@ -7,6 +7,7 @@ import Planning from "./components/Planning/Planning";
 import TableauDeBord from "./components/TableauDeBord";
 
 function App() {
+  
   return (
     <BrowserRouter>
       <Sidebar />
