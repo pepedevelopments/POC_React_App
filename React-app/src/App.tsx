@@ -2,26 +2,21 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import PlanningPage from "./components/planningPage/PlanningPage";
 import Navbar from "./components/Navbar";
 import PersonsPage from "./components/PersonsPage";
+import Sidebar from "./components/sideBar/Sidebar";
+import Planning from "./components/Planning";
+import TableauDeBord from "./components/TableauDeBord";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <Sidebar />
       <div>
-        <div className="container my-5 mt-5">
-          <Routes>
-            <Route path="/" element={<PlanningPage />} />
-            <Route path="/planningPage" element={<PlanningPage />} />
-            <Route
-              path="/personsPage"
-              element={
-                <div>
-                  <PersonsPage />
-                </div>
-              }
-            />
-          </Routes>
-        </div>
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<TableauDeBord />} /> 
+          <Route path="/planning" element={<Planning />} />
+        </Routes>
+      </div>
       </div>
     </BrowserRouter>
   );
