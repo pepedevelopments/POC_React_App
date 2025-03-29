@@ -75,12 +75,12 @@ const PlanningPage = () => {
         </div>
 
         <div className="d-flex ms-2 my-3" style={{ gap: '30px' }}>
-                <ColoredSquareWithText color='#f8d487' opacity={1} text="Poste de jour (J)" />
-                <ColoredSquareWithText color='#8ba2cd' opacity={1} text="Poste de nuit (N)" />
-                <ColoredSquareWithText color='#1b263b' opacity={1} text="Congé (C)" />
-                <ColoredSquareWithText color='#aecbb8' opacity={1} text="Maladie (M)" />
-                <ColoredSquareWithText color='#ffbd8e' opacity={1} text="Formation (F)" />
-                <ColoredSquareWithText color='#415a77' opacity={1} text="Demande exceptionnelle" />
+                <ColoredSquareWithText color='#f8d487' opacity={1} text="Poste de jour (J)" hasBlackCorner={false} />
+                <ColoredSquareWithText color='#8ba2cd' opacity={1} text="Poste de nuit (N)" hasBlackCorner={false}/>
+                <ColoredSquareWithText color='#1b263b' opacity={1} text="Congé (C)" hasBlackCorner={false}/>
+                <ColoredSquareWithText color='#aecbb8' opacity={1} text="Maladie (M)" hasBlackCorner={false}/>
+                <ColoredSquareWithText color='#ffbd8e' opacity={1} text="Formation (F)" hasBlackCorner={false}/>
+                <ColoredSquareWithText color='white' opacity={1} text="Demande exceptionnelle" hasBlackCorner={true}/>
             </div>
             </div>
 
