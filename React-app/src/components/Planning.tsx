@@ -44,7 +44,7 @@ const PlanningPage = () => {
 </form>
 </div>
         <div className="container mt-5">
-            <Tableau n={16} m={31} />
+            <Tableau month={10} />
         </div>
       </div>
     </div>

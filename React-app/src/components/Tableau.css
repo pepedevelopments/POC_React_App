@@ -1,0 +1,43 @@
+.day-cell {
+  padding: 0 !important;
+}
+
+.employee-cell {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 12px !important;
+}
+
+.ant-table-tbody .day-cell {
+  cursor: pointer;
+  text-align: center;
+}
+
+.constraint-cell.j {
+    background-color: #F8D487;
+}
+
+.constraint-cell.n {
+    background-color: #8BA2CD;
+}
+
+.constraint-cell.c {
+    background-color: #F3A5BC;
+}
+
+.constraint-cell.m {
+    background-color: #AECBB8;
+}
+
+.constraint-cell.f {
+    background-color: #FFBD8E;
+}
+
+.constraint-cell.t {
+    background-color: #415A77;
+}
+
+.modal-label {
+  font-weight: bold;
+  margin-top: 10px;
+}
