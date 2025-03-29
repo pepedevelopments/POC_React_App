@@ -2,6 +2,14 @@
   padding: 0 !important;
 }
 
+.saturday {
+  border-left: 1px solid black;
+}
+
+.sunday {
+  border-right: 1px solid black;
+}
+
 .employee-cell {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -13,16 +21,17 @@
   text-align: center;
 }
 
-.constraint-cell.j {
+.position-cell.j {
     background-color: #F8D487;
 }
 
-.constraint-cell.n {
+.position-cell.n {
     background-color: #8BA2CD;
 }
 
 .constraint-cell.c {
-    background-color: #F3A5BC;
+    background-color: #1B263B;
+    color: white;
 }
 
 .constraint-cell.m {
@@ -35,6 +44,18 @@
 
 .constraint-cell.t {
     background-color: #415A77;
+}
+
+.constraint-cell.ask {
+}
+
+.constraint-cell.ask span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  aspect-ratio: 1;
+  background-color: black;
 }
 
 .modal-label {

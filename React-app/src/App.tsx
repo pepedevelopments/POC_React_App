@@ -10,16 +10,15 @@ import Tableau from "./components/Tableau";
 function App() {
   return (
     <BrowserRouter>
-      <Tableau month={8} />
-      {/* <Sidebar /> */}
-      {/* <div>
+      <Sidebar />
+      <div>
       <div className="content">
         <Routes>
           <Route path="/" element={<TableauDeBord />} /> 
           <Route path="/planning" element={<Planning />} />
         </Routes>
       </div>
-      </div> */}
+      </div>
     </BrowserRouter>
   );
 }
