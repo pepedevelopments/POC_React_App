@@ -1,4 +1,6 @@
 .sidebar {
+    display: flex;
+    flex-direction: column;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -14,7 +16,7 @@
   }
   
   .sidebar a {
-    color: black;
+    color: white;
     padding: 10px 15px;
     text-decoration: none;
     display: block;
@@ -30,6 +32,41 @@
     padding: 20px;
   }
 
-  .active {
+  .sidebar .active {
     font-weight: bold;
+    color: #1B263B;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2); 
+  }
+
+  .toggle-button {
+    position: absolute;
+    top: 88%; 
+    right: 10px;
+    transform: translateY(-50%);
+    background-color: #778da9; 
+    color: white; 
+    border: none;
+    width: 30px; 
+    height: 30px;
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .toggle-button:hover {
+    background-color: #415a77;
+    color: #fff;
+  }
+
+  .sidebar.open {
+    width: 250px;
+  }
+  
+  .sidebar.closed {
+    width: 60px;
   }

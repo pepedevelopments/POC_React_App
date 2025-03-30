@@ -3,11 +3,17 @@ import PlanningPage from "./components/planningPage/PlanningPage";
 import Navbar from "./components/Navbar";
 import PersonsPage from "./components/PersonsPage";
 import Sidebar from "./components/sideBar/Sidebar";
-import Planning from "./components/Planning";
+import Planning from "./components/Planning/Planning";
 import TableauDeBord from "./components/TableauDeBord";
 import Tableau from "./components/Tableau";
+import './App.css';
+
 
 function App() {
+  return (
+    <Tableau month={8} />
+  )
+  
   return (
     <BrowserRouter>
       <Sidebar />

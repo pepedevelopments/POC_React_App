@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DatePicker, Modal, notification, Select, Table, TableProps, Tooltip } from 'antd';
+import { Button, DatePicker, Modal, notification, Select, Spin, Table, TableProps, Tooltip } from 'antd';
 import './Tableau.css';
 import { AnyObject } from 'antd/es/_util/type';
 import dayjs from 'dayjs'
@@ -7,6 +7,9 @@ import axios from 'axios';
 import { constraints2, planning2 } from './planning2';
 import { ConstraintType } from './shared';
 import { constraints1, planning1 } from './planning1';
+import background1 from '../background1.svg';
+import background2 from '../background2.svg';
+import { LoadingOutlined } from '@ant-design/icons';
 
 interface TableauProps {
   month: number;
@@ -142,6 +145,7 @@ const Tableau = ({ month }: TableauProps) => {
   const [planning, setPlanning] = useState<PlanningEntry[]>([]);
   const [generateIdx, setGenerateIdx] = useState(0);
   const [warning, setWarning] = useState<string>();
+  const [background, setBackground] = useState(background1);
 
   const [notificationApi, notificationContextHolder] = notification.useNotification();
 
@@ -183,14 +187,14 @@ const Tableau = ({ month }: TableauProps) => {
   );
 
   const columns: TableProps['columns'] = [
-    {
-      title: 'Employé',
-      dataIndex: 'name',
-      key: 'name',
-      fixed: 'left',
-      width: 300,
-      className: 'employee-cell',
-    },
+    // {
+    //   title: 'Employé',
+    //   dataIndex: 'name',
+    //   key: 'name',
+    //   fixed: 'left',
+    //   width: 300,
+    //   className: 'employee-cell',
+    // },
     ...dates.map((date) => ({
       title: (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -203,14 +207,28 @@ const Tableau = ({ month }: TableauProps) => {
       width: 50,
       className: 'day-cell',
       onHeaderCell: () => {
+        const style = {};
+        if (date.getDay() === 6) {
+          style.borderLeft = "1px solid black";
+        }
+        if (date.getDay() === 0) {
+          style.borderRight = "1px solid black";
+        }
         return {
-          style: {
-            borderLeft: date.getDay() === 6 ? "1px solid black" : "none",
-            borderRight: date.getDay() === 0 ? "1px solid black" : "none",
-          },
+          style,
         };
       },
       onCell: (record: AnyObject) => {
+        const style = {
+          height: 28.3,
+          borderColor: "#1B263B80",
+        };
+        if (date.getDay() === 6) {
+          style.borderLeft = "1.5px solid #1B263BCC";
+        }
+        if (date.getDay() === 0) {
+          style.borderRight = "1.5px solid #1B263BCC";
+        }
         return {
           onClick: () => setModalState({
             employeeId: record.id,
@@ -218,10 +236,7 @@ const Tableau = ({ month }: TableauProps) => {
             date: date,
             until: date,
           }),
-          style: {
-            borderLeft: date.getDay() === 6 ? "1px solid black" : "none",
-            borderRight: date.getDay() === 0 ? "1px solid black" : "none",
-          },
+          style,
         };
       },
       render: (_: string, record: AnyObject) => {
@@ -259,6 +274,7 @@ const Tableau = ({ month }: TableauProps) => {
             </div>
           );
         }
+        return <div> </div>;
       }
     }))
   ];
@@ -294,20 +310,23 @@ const Tableau = ({ month }: TableauProps) => {
   };
 
   const generateSchedule = async () => {
-    setIsGenerating(true);
-    setTimeout(() => {
-      if (generateIdx === 0) {
-        setPlanning(planning1);
-        setConstraints(constraints1);
-      } else {
-        setPlanning(planning2);
-        setConstraints(constraints2);
-      }
-      setWarning(undefined);
-      setGenerateIdx(generateIdx + 1);
-      setIsGenerating(false);
-    }, 500);
-    if (generateIdx < 4) return;
+    if (generateIdx < 3) {
+      setIsGenerating(true);
+      setTimeout(() => {
+        if (generateIdx === 0) {
+          setBackground(background2);
+          setPlanning(planning1);
+          setConstraints(constraints1);
+        } else {
+          setPlanning(planning2);
+          setConstraints(constraints2);
+        }
+        setWarning(undefined);
+        setGenerateIdx(generateIdx + 1);
+        setIsGenerating(false);
+      }, 500);
+      return;
+    }
     setIsGenerating(true);
     try {
       const res = await axios.post("http://localhost:3000/engine/generate", {
@@ -331,55 +350,59 @@ const Tableau = ({ month }: TableauProps) => {
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      {notificationContextHolder}
-      <Table columns={columns} dataSource={people} bordered pagination={false} />
-      <Modal
-        title="Ajouter un évènement"
-        open={modalState.show}
-        onOk={handleOk}
-        onCancel={hideModal}
-        cancelText="Annuler"
-        okText="Ajouter"
-        width={300}
-      >
-        <div className="modal-label">Évènement</div>
-        <Select
-          style={{ width: '100%' }}
-          value={modalState.type}
-          onChange={(value) => {
-            setModalState({
-              ...modalState,
-              type: value,
-            });
-          }}
-        >
-          <Select.Option value="PTO" style={{ backgroundColor: "#1B263B", color: "white" }}>Congé</Select.Option>
-          <Select.Option value="SICK" style={{ backgroundColor: "#AECBB8" }}>Arrêt Maladie</Select.Option>
-          <Select.Option value="TRAINING" style={{ backgroundColor: "#FFBD8E" }}>Formation</Select.Option>
-          <Select.Option value="NOT_DAY">Absence Jour</Select.Option>
-          <Select.Option value="NOT_NIGHT">Absence Nuit</Select.Option>
-        </Select>
-        <div className="modal-label">Jusqu'au</div>
-        <DatePicker
-          style={{ width: '100%' }}
-          format="DD/MM/YYYY"
-          minDate={modalState.date ? dayjs(modalState.date) : undefined}
-          value={modalState.until ? dayjs(modalState.until) : null}
-          
-          onChange={(_, dateString) => {
-            const dateStrings = dateString.toString().split("/");
-            const day = new Date(Date.UTC(Number(dateStrings[2]), Number(dateStrings[1]) - 1, Number(dateStrings[0])));
-            setModalState({
-              ...modalState,
-              until: day,
-            });
-          }}
-        />
-      </Modal>
-      <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-        <Button loading={isGenerating} onClick={generateSchedule}>Générer</Button>
-        <div style={{ color: "red", fontSize: 14 }}>{warning}</div>
+    <div className="background-container">
+      <img src={background} className="background-container" />
+      <div className="tableau-container">
+        <div style={{ width: '100%' }}>
+          {notificationContextHolder}
+          <Table columns={columns} dataSource={people} bordered pagination={false} showHeader={false} />
+          <Modal
+            title="Ajouter un évènement"
+            open={modalState.show}
+            onOk={handleOk}
+            onCancel={hideModal}
+            cancelText="Annuler"
+            okText="Ajouter"
+            width={300}
+          >
+            <div className="modal-label">Évènement</div>
+            <Select
+              style={{ width: '100%' }}
+              value={modalState.type}
+              onChange={(value) => {
+                setModalState({
+                  ...modalState,
+                  type: value,
+                });
+              }}
+            >
+              <Select.Option value="PTO" style={{ backgroundColor: "#1B263B", color: "white" }}>Congé</Select.Option>
+              <Select.Option value="SICK" style={{ backgroundColor: "#AECBB8" }}>Arrêt Maladie</Select.Option>
+              <Select.Option value="TRAINING" style={{ backgroundColor: "#FFBD8E" }}>Formation</Select.Option>
+              <Select.Option value="NOT_DAY">Absence Jour</Select.Option>
+              <Select.Option value="NOT_NIGHT">Absence Nuit</Select.Option>
+            </Select>
+            <div className="modal-label">Jusqu'au</div>
+            <DatePicker
+              style={{ width: '100%' }}
+              format="DD/MM/YYYY"
+              minDate={modalState.date ? dayjs(modalState.date) : undefined}
+              value={modalState.until ? dayjs(modalState.until) : null}
+              
+              onChange={(_, dateString) => {
+                const dateStrings = dateString.toString().split("/");
+                const day = new Date(Date.UTC(Number(dateStrings[2]), Number(dateStrings[1]) - 1, Number(dateStrings[0])));
+                setModalState({
+                  ...modalState,
+                  until: day,
+                });
+              }}
+            />
+          </Modal>
+        </div>
+      </div>
+      <div className="button-container" onClick={generateSchedule}>
+        {isGenerating && <Spin className={`spin-${Math.min(generateIdx, 1)}`} style={{ color: "white" }} indicator={<LoadingOutlined spin />} />}
       </div>
     </div>
   );

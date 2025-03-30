@@ -2,14 +2,6 @@
   padding: 0 !important;
 }
 
-.saturday {
-  border-left: 1px solid black;
-}
-
-.sunday {
-  border-right: 1px solid black;
-}
-
 .employee-cell {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -19,6 +11,12 @@
 .ant-table-tbody .day-cell {
   cursor: pointer;
   text-align: center;
+}
+
+.position-cell, .constraint-cell {
+  height: 100%;
+  padding-top: 2px;
+  vertical-align: middle;
 }
 
 .position-cell.j {
@@ -61,4 +59,12 @@
 .modal-label {
   font-weight: bold;
   margin-top: 10px;
+}
+
+.spin-0 {
+  left: 20px;
+}
+
+.spin-1 {
+    left: 12px;
 }

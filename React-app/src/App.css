@@ -1,0 +1,25 @@
+.background-container {
+    position: relative;
+    display: block;
+    /* background-image: url('./background.svg');
+    background-size: contain;
+    background-position: top;
+    background-repeat: no-repeat; */
+    height: 800px;
+}
+
+.tableau-container {
+    position: absolute;
+    top: 168px;
+    left: 263px;
+    width: 748px;
+}
+
+.button-container {
+    position: absolute;
+    top: 743px;
+    left: 978px;
+    width: 224px;
+    height: 36px;
+    cursor: pointer;
+}

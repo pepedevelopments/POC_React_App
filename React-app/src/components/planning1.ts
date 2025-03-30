@@ -128,6 +128,12 @@ export const planning1 = [
     "date": "2025-09-04",
     "employees": [
       {
+        "id": 2,
+        "name": "IDE 2",
+        "position": "IDE",
+        "shift": "NOT_DAY"
+      },
+      {
         "id": 3,
         "name": "IDE 3",
         "position": "IDE",
@@ -949,6 +955,12 @@ export const planning1 = [
         "shift": "NIGHT"
       },
       {
+        "id": 6,
+        "name": "IDE 6",
+        "position": "IDE",
+        "shift": "F"
+      },
+      {
         "id": 8,
         "name": "IDE 8",
         "position": "IDE",
@@ -1242,8 +1254,8 @@ export const planning1 = [
         "shift": "DAY"
       },
       {
-        "id": 8,
-        "name": "IDE 8",
+        "id": 7,
+        "name": "IDE 7",
         "position": "IDE",
         "shift": "DAY"
       },
